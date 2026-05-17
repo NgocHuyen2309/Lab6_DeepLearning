@@ -1,0 +1,27 @@
+# Môi trường Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Môi trường ảo (Virtual Environment)
+venv/
+env/
+.venv/
+
+# Cấu hình của VS Code
+.vscode/
+
+# Dữ liệu Deep Learning (Tránh push nhầm dataset nặng của Tâm và Hoàng)
+data/
+dataset/
+datasets/
+*.zip
+*.csv
+
+# Các file trọng số mô hình (Model Weights)
+*.pt
+*.pth
+*.ckpt
+
+# Các file tạm của Jupyter Notebook (nếu có dùng)
+.ipynb_checkpoints/

@@ -1,0 +1,1 @@
+# TODO: @Trí viết khung gọi Model ViT, @Tâm ghép dataloader vào để chạy thực nghiệm.
