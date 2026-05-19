@@ -1,41 +1,55 @@
-# Nghiên Cứu Kiến Trúc Attention, Transformer & Vision Transformer (ViT)
+# Gói hoàn thiện nhiệm vụ của Trí - Image Classification
 
+## 1. File đã hoàn thiện
 
-
-Kho lưu trữ mã nguồn mở của Nhóm 1 phục vụ đồ án thực hành môn Deep Learning - Giảng viên hướng dẫn: Thầy Đặng N.H. Thành. Dự án tập trung triển khai từ con số 0 (From Scratch) hai kiến trúc mạng lớn dựa trên cơ chế Attention ứng dụng vào bài toán phân loại.
-
-
-
-## 📂 Tổ chức Cấu trúc Mã nguồn
-
-Hệ thống mã nguồn được module hóa thành các không gian riêng biệt tương ứng với nhiệm vụ phân công:
+Copy 2 file sau vào đúng vị trí trong repo:
 
 ```text
+src/image_classification/dataset.py
+main_image.py
+```
 
-attention-transformer-vit/
+## 2. Điểm đã xử lý đúng yêu cầu
 
-│
+- Tích hợp thành công tập dữ liệu `CIFAR-10` từ thư viện `torchvision`.
+- Có tiền xử lý bằng `Resize` về 224x224, `Normalize`, và tăng cường dữ liệu `RandomHorizontalFlip`.
+- Trả về `images` có shape `[batch_size, 3, 224, 224]` và `labels` đúng để đưa vào Transformer.
+- `main_image.py` đã kết nối DataLoader thật với mô hình Vision Transformer thu gọn (ViT-Tiny) để tránh lỗi VRAM.
+- Training loop có đủ Train Loss, Train Accuracy, Validation Loss, Validation Accuracy.
+- Tự xuất `results/vit_training_log.csv` để nhóm phân tích vẽ biểu đồ và đưa vào báo cáo.
+- Tự lưu biểu đồ loss/accuracy nếu môi trường có `matplotlib`.
 
-├── src/
+## 3. Cài thư viện
 
-│   ├── text_classification/       # PHẦN CHUNG: Khối xử lý Văn bản
+Cài đặt các gói PyTorch và công cụ trực quan:
 
-│   │   ├── model.py               # Lõi Transformer mạng xử lý chuỗi tuần tự (Huyền)
+```bash
+pip install torch torchvision torchaudio matplotlib tqdm
+```
 
-│   │   └── dataset.py             # Thực thể quản lý cấu trúc dữ liệu văn bản (Hoàng)
+*(Lưu ý: Nếu dùng GPU NVIDIA trên Windows, nhớ ưu tiên cài pytorch-cuda phù hợp)*
 
-│   │
+## 4. Chạy thử nhanh để kiểm tra pipeline
 
-│   └── image_classification/      # PHẦN RIÊNG: Khối xử lý Hình ảnh
+```bash
+python main_image.py --epochs 1 --max-train-samples 2000 --max-val-samples 500
+```
 
-│       ├── model.py               # Lõi mạng Vision Transformer (ViT) xử lý không gian (Trí)
+## 5. Chạy thực nghiệm để lấy số liệu báo cáo
 
-│       └── dataset.py             # Thực thể quản lý và biến đổi hình ảnh (Augmentation) (Tâm)
+```bash
+python main_image.py --epochs 10 --batch-size 32 --lr 3e-4
+```
 
-│
+## 6. Kết quả cần nộp cho Hân/Thành
 
-├── main_text.py                   # Điểm kích hoạt huấn luyện Text Classification
+Sau khi chạy xong, gửi các file trong thư mục `results/`:
 
-├── main_image.py                  # Điểm kích hoạt huấn luyện Image Classification
+```text
+results/vit_training_log.csv
+results/vit_training_curves.png
+```
 
-└── README.md                      # Tài liệu điều hướng hệ thống
+## 7. Đoạn mô tả ngắn đưa vào báo cáo Word
+
+Trong phần thực nghiệm Image Classification, nhóm sử dụng tập dữ liệu CIFAR-10 gồm 10 lớp đối tượng cơ bản. Dữ liệu hình ảnh được tiền xử lý Resize lên 224x224 để phù hợp với chuẩn của ViT, sau đó chuẩn hóa phân phối màu sắc (Normalize) và áp dụng lật ảnh ngẫu nhiên để tăng cường dữ liệu. Mô hình Vision Transformer nhận đầu vào dạng `images` có shape `[batch_size, 3, 224, 224]`, thực hiện chia nhỏ ảnh thành các patches 16x16 và tính toán qua mạng Transformer Encoder để xuất ra tensor logits có shape `[batch_size, 10]`. Quá trình huấn luyện sử dụng AdamW ghi lại `train_loss`, `train_accuracy`, `val_loss`, `val_accuracy` theo từng epoch và xuất ra file CSV cùng biểu đồ trực quan để phục vụ phân tích hội tụ/overfitting trong báo cáo.
